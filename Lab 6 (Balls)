@@ -12,7 +12,7 @@ HEIGHT = 900
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 #the number of frames per second
-FPS = 20
+FPS = 0,5
 #the number of balls appearing per second
 K = 1.5 
 #time between appearing white balls
