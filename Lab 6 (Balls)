@@ -115,9 +115,9 @@ while not finished:
         ball[0] += ball[4]
         ball[1] += ball[5]
         # conditions of reflection from the walls
-        if (ball[0] + ball[2] > 600) or (ball[0] - ball[2] < 0):
+        if (ball[0] + ball[2] > WIDTH) or (ball[0] - ball[2] < 0):
             ball[4] *= -1
-        if (ball[1] + ball[2] > 450) or (ball[1] - ball[2] < 0):
+        if (ball[1] + ball[2] > HEIGHT) or (ball[1] - ball[2] < 0):
             ball[5] *= -1
         # condition for disappearing if the ball is old
         if ball[6] < 0 and not ball[7]:
