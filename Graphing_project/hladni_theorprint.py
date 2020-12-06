@@ -55,21 +55,20 @@ def redraw_screen(w=[1, 3]):
 #game screen
 
 
-def main():
+def hladni_theorprint(v1, v2):
 	#Game screen construction
-	root = tk.Tk()
-	fr = tk.Frame(root)
+	root = tk.Toplevel()
+#	fr = tk.Frame(root)
 	root.geometry(str(DIM) + 'x' + str(DIM))
 	canv = tk.Canvas(root, bg='white')
 	canv.pack(fill=tk.BOTH, expand=1)
 
 	#Making the image
-	photo = redraw_screen([5, 7])			
+	photo = redraw_screen([v1,v2])
 	main_img = canv.create_image(0,0,image=photo,anchor=tk.NW)
 	
 	#Letting the program stay around for a little while
 	for i in range(T_MAX):
 		canv.update()
 		sleep(1/FPS)
-
-main()
+#hladni_theorprint(5, 8)
