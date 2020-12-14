@@ -68,7 +68,7 @@ def main():
 	main_img = canv.create_image(0,0,image=photo,anchor=tk.NW)
 	
 	#Letting the program stay around for a little while
-	for i in range(T_MAX):
+	while True:
 		canv.update()
 		sleep(1/FPS)
 

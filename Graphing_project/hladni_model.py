@@ -93,17 +93,17 @@ class GameObjectsList:
 			self.objects_list.append(temp)
 	
 	def coords_transform(self, i, j):
-	'''
-	Recalculates coordinates.
-	Input: screen coords (0, 0 in the top left corner)
-	Output: plate coords (0, 0 in the center)
-	'''
+		'''
+		Recalculates coordinates.
+		Input: screen coords (0, 0 in the top left corner)
+		Output: plate coords (0, 0 in the center)
+		'''
 		return(i+self.dim-1, j+self.dim-1)
 	
 	def update(self, canv, plate):
-	'''
-	Update the screen with the plate state
-	'''
+		'''
+		Update the screen with the plate state
+		'''
 		for i in range(-self.dim+1, self.dim):
 			for j in range(-self.dim+1, self.dim):
 				(xpos, ypos) = self.coords_transform(i, j)
@@ -144,7 +144,6 @@ def main():
 		time += timestep
 		
 		screen.update(canv, plate)
-		print(i)
 
 if __name__ == '__main__':
 	main()
