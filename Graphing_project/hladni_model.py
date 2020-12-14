@@ -2,8 +2,8 @@
 import tkinter as tk
 import numpy as np
 
-DIM = 32 #Radius of the screen in simulated cells
-PXPERDIM = 10 #Size of one cell in pixels
+#DIM = 32 #Radius of the screen in simulated cells
+#PXPERDIM = 10 #Size of one cell in pixels
 
 class OptimizedPlate:
     def __init__(self, dim, attached = False, density = 20, friction = 0, tension = 1):
@@ -73,7 +73,7 @@ class OptimizedPlate:
         return "#%02x%02x%02x" % res
 
 class GameObjectsList:
-    def __init__(self, canv, plate, pxscale = PXPERDIM, scale = 35500):
+    def __init__(self, canv, plate, pxscale = 10, scale = 35500):
         '''
         Constructs the list of objects representating simulated cells.
         canv - canvas to draw them onto
@@ -120,8 +120,10 @@ def harmonic_force(time, frequency, force = 1):
         '''
         return force*np.sin(time*frequency)
     
-def hladni_model(force_freq_value = 1):
+def hladni_model(force_freq_value = 10, dim = 32, borders_attached = False): #changed
     #Screen creation
+    DIM = dim
+    PXPERDIM = int(320 / DIM)
     root = tk.Tk()
     gstr = str((2*DIM+1)*PXPERDIM)
     root.geometry(gstr+'x'+gstr)
@@ -130,14 +132,14 @@ def hladni_model(force_freq_value = 1):
     
     
     #Simulation initialisation
-    plate = OptimizedPlate(DIM)
-    screen = GameObjectsList(canv, plate)
+    plate = OptimizedPlate(DIM, attached = borders_attached)
+    screen = GameObjectsList(canv, plate, pxscale=PXPERDIM)
     time = 0
     
     #Time management
     TIME = 1500
     timestep = 1
-    frequency = 2*np.pi*force_freq_value/100
+    frequency = 2*np.pi*force_freq_value/1000
     
     for i in range(TIME): #Main cycle
         force = harmonic_force(time, frequency, 0.01)
