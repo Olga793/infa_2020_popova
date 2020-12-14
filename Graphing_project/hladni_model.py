@@ -2,8 +2,8 @@
 import tkinter as tk
 import numpy as np
 
-DIM = 32 #Radius of the screen in simulated cells
-PXPERDIM = 10 #Size of one cell in pixels
+#DIM = 32 #Radius of the screen in simulated cells
+#PXPERDIM = 10 #Size of one cell in pixels
 
 class OptimizedPlate:
 	def __init__(self, dim, attached = False, density = 20, friction = 0, tension = 1):
@@ -15,13 +15,13 @@ class OptimizedPlate:
 		tension - how strong forces among the plate are
 		'''
 		self.dim = dim
-		self.coords = np.zeros((dim, dim), dtype=float) 
+		self.coords = np.zeros((dim, dim), dtype=float)
 		self.speeds = np.zeros((dim, dim), dtype=float) #coords and speeds of every simulated cell
 		self.attached = attached
 		self.tension = tension
 		self.friction = friction
 		self.density = density
-		
+	
 	def tick(self, force, timestep = 1):
 		'''
 		This will desctibe the plate state at the moment.
@@ -34,7 +34,7 @@ class OptimizedPlate:
 				self.speeds[i][j] *= (1 - self.friction) #energy loss
 		self.speeds[0][0] += force*timestep/self.density #external force
 		self.coords += self.speeds*timestep #coords recalculation
-		
+	
 	def force_calculate(self, i, j):
 		'''
 		Internal force among the plate for a certain simulated cell.
@@ -50,30 +50,30 @@ class OptimizedPlate:
 				else:
 					a = self.getcoords(k[0], k[1]) - self.coords[i][j]
 				all_sins += a
-			return all_sins*self.tension
+		return all_sins*self.tension
 	
 	def getcoords(self, i, j):
 		'''
 		Returns the deviation of a cell with coords (i, j), negatives are possible
 		'''
 		return self.coords[abs(i)][abs(j)]
-		
+	
 	def getcolor(self, i, j, scale):
 		'''
 		Returns the colour to paint the cell (i, j) into for simulation purposes.
 		'''
 		value = self.getcoords(i, j)
 		intensity = min(int(abs(value)*scale), 255)
-		
+	
 		if value > 0:
 			res = (intensity, 0, 0) #Positive deviation is painted as red
 		else:
 			res = (0, intensity, 0) #Negative deviation is painted as green
-		
+	
 		return "#%02x%02x%02x" % res
 
 class GameObjectsList:
-	def __init__(self, canv, plate, pxscale = PXPERDIM, scale = 35500):
+	def __init__(self, canv, plate, pxscale = 10, scale = 35500):
 		'''
 		Constructs the list of objects representating simulated cells.
 		canv - canvas to draw them onto
@@ -110,7 +110,7 @@ class GameObjectsList:
 				color = plate.getcolor(i, j, self.scale)
 				canv.itemconfig(self.objects_list[xpos][ypos], fill = color)
 		canv.update()
-		
+	
 def harmonic_force(time, frequency, force = 1):
 	'''
 	Calculates the force to punch the plate with at any given moment.
@@ -118,32 +118,34 @@ def harmonic_force(time, frequency, force = 1):
 	frequency - the frequency of fluctuations (2pi/period)
 	force - amplitude of that force
 	'''
-	return force*np.sin(time*frequency)
+	return force*np.cos(np.pi*time*frequency/3)
 	
-def main():
+def hladni_model(force_freq_value = 10, dim = 32, borders_attached = False): #changed
 	#Screen creation
+	DIM = dim
+	PXPERDIM = int(320 / DIM)
 	root = tk.Tk()
-	gstr = str((2*DIM+1)*PXPERDIM)
+	gstr = str((2*DIM - 1)*PXPERDIM)
 	root.geometry(gstr+'x'+gstr)
 	canv = tk.Canvas(root, bg='black')
 	canv.pack(fill = tk.BOTH, expand=1)
 	
+	
 	#Simulation initialisation
-	plate = OptimizedPlate(DIM)
-	screen = GameObjectsList(canv, plate)
+	plate = OptimizedPlate(DIM, attached = borders_attached)
+	screen = GameObjectsList(canv, plate, pxscale=PXPERDIM)
 	time = 0
 	
 	#Time management
 	TIME = 1500
 	timestep = 1
-	frequency = 2*np.pi*0.01
+	frequency = 2*np.pi*force_freq_value/1000
 	
 	for i in range(TIME): #Main cycle
 		force = harmonic_force(time, frequency, 0.01)
 		plate.tick(force, timestep)
 		time += timestep
-		
+	
 		screen.update(canv, plate)
+		print(i)
 
-if __name__ == '__main__':
-	main()
