@@ -16,7 +16,9 @@ def stactic_button_click(val_1, val_2):
 def simulation_button_click(freq_val, discretization_val, borders_attached_val):
     try:
         freq = float(freq_val)
-        hladni_model.hladni_model(freq, discretization_val, borders_attached_val)
+        print(borders_attached_val)
+        hladni_model.hladni_model(freq, discretization_val,
+                                  borders_attached = borders_attached_val)
     except ValueError:
         mb.showinfo('Input Error!',
                     'You have to insert one value into every box \nThe values MUST be FLOAT!')
@@ -56,15 +58,18 @@ def main():
     discretization_scale = tk.Scale(interaction_frame, orient = 'horizontal', resolution = 1, from_ = 20, to = 40)
     discretization_scale.pack()
     
-    borders_attached_val = False 
+    borders_attached_val = tk.BooleanVar()
+    borders_attached_val.set(1)
     
-    borders_attached_check = tk.Checkbutton(interaction_frame, text = 'Borders attached', var = borders_attached_val)
+    borders_attached_check = tk.Checkbutton(interaction_frame, text = 'Borders attached',
+                                            variable = borders_attached_val,
+                                            onvalue = 1, offvalue = 0)
     borders_attached_check.pack()
     
     simulation_mode_button = tk.Button(interaction_frame, text = 'Simulation mode', 
                                    command = lambda: simulation_button_click(force_scale.get(),
                                                                              discretization_scale.get(),
-                                                                             borders_attached_val))
+                                                                             borders_attached_val.get()))
     simulation_mode_button.pack()
     
     interaction_frame.pack()
